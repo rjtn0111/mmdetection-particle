@@ -2,6 +2,10 @@
 from mmengine.utils import is_str
 
 
+# reference: https://qiita.com/ryosao/items/908b05f4da6648931134
+# def rjtn0111_classes():
+#     return ['target']
+            
 def wider_face_classes() -> list:
     """Class names of WIDERFace."""
     return ['face']
@@ -496,7 +500,8 @@ dataset_aliases = {
     'oid_challenge': ['oid_challenge', 'openimages_challenge'],
     'oid_v6': ['oid_v6', 'openimages_v6'],
     'objects365v1': ['objects365v1', 'obj365v1'],
-    'objects365v2': ['objects365v2', 'obj365v2']
+    'objects365v2': ['objects365v2', 'obj365v2'],
+    # 'rjtn0111': ['rjtn0111'] # add
 }
 
 

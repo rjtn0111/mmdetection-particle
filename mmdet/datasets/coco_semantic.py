@@ -43,8 +43,10 @@ class CocoSegDataset(ADE20KSegDataset):
             'textile-other', 'towel', 'tree', 'vegetable', 'wall-brick',
             'wall-concrete', 'wall-other', 'wall-panel', 'wall-stone',
             'wall-tile', 'wall-wood', 'water-other', 'waterdrops',
-            'window-blind', 'window-other', 'wood'),
-        palette=[(120, 120, 120), (180, 120, 120), (6, 230, 230), (80, 50, 50),
+            'window-blind', 'window-other', 'wood'
+            ),
+        palette=[
+            (120, 120, 120), (180, 120, 120), (6, 230, 230), (80, 50, 50),
                  (4, 200, 3), (120, 120, 80), (140, 140, 140), (204, 5, 255),
                  (230, 230, 230), (4, 250, 7), (224, 5, 255), (235, 255, 7),
                  (150, 5, 61), (120, 120, 70), (8, 255, 51), (255, 6, 82),
@@ -87,4 +89,5 @@ class CocoSegDataset(ADE20KSegDataset):
                  (134, 199, 156), (209, 226, 140), (96, 36, 108), (96, 96, 96),
                  (64, 170, 64), (152, 251, 152), (208, 229, 228),
                  (206, 186, 171), (152, 161, 64), (116, 112, 0), (0, 114, 143),
-                 (102, 102, 156), (250, 141, 255)])
+                 (102, 102, 156), (250, 141, 255)
+                 ])

@@ -1,4 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
+# reference: https://qiita.com/ryosao/items/908b05f4da6648931134
 from multiprocessing import Pool
 
 import numpy as np
@@ -768,6 +769,7 @@ def print_map_summary(mean_ap,
     if dataset is None:
         label_names = [str(i) for i in range(num_classes)]
     elif is_str(dataset):
+        # dataset = 'rjtn0111' # add
         label_names = get_classes(dataset)
     else:
         label_names = dataset

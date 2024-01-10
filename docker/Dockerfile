@@ -37,4 +37,9 @@ RUN conda clean --all \
     && cd /mmdetection \
     && pip install --no-cache-dir -e .
 
+# add tensorboard
+RUN pip install tensorboard
+# add wandb
+RUN pip install wandb
+
 WORKDIR /mmdetection
