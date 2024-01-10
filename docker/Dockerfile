@@ -44,3 +44,6 @@ RUN pip install tensorboard
 RUN pip install wandb
 
 WORKDIR /mmdetection
+
+# Create the 'data' directory under '/mmdetection'
+# RUN mkdir -p /mmdetection/data
