@@ -32,8 +32,9 @@ RUN pip install openmim && \
     mim install "mmengine>=0.7.1" "mmcv>=2.0.0rc4"
 
 # Install MMDetection
+# change original repository
 RUN conda clean --all \
-    && git clone https://github.com/open-mmlab/mmdetection.git /mmdetection \
+    && git clone https://github.com/rjtn0111/mmdetection-particle.git /mmdetection \
     && cd /mmdetection \
     && pip install --no-cache-dir -e .
 
