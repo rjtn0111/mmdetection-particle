@@ -121,3 +121,7 @@ work_dirs/
 *.pth
 *.py~
 *.sh~
+
+# original
+log/
+temp_dir/
