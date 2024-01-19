@@ -99,8 +99,8 @@ def annotations(mask_path):
 
 def categories():
     tmps = []
-    sup = ["person"]
-    cat = ["person"]
+    sup = ["target"]
+    cat = ["target"]
     for i in range(len(sup)):
         tmp = cl.OrderedDict()
         tmp["id"] = i+1
