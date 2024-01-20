@@ -92,7 +92,7 @@ def annotations(mask_path):
         tmp["category_id"] = 1
         tmp["area"] = float(boxes[0][3] - boxes[0][1]) * float(boxes[0][2] - boxes[0][0])
         tmp["iscrowd"] = 0
-        tmp["bbox"] =  [float(boxes[0][0]), float(boxes[0][1]), float(boxes[0][3] - boxes[0][1]), float(boxes[0][2] - boxes[0][0])]
+        tmp["bbox"] =  [float(boxes[0][0]), float(boxes[0][1]), float(boxes[0][2] - boxes[0][0]), float(boxes[0][3] - boxes[0][1])]
         tmps.append(tmp)
     return tmps
 
