@@ -165,13 +165,14 @@ def annotation_to_mask(img_id: int, path=None, coco=None):
 
     if coco == None:
         coco = COCO(path)
-    img_ids = coco.getImgIds()
-    img_data = coco.imgs[img_ids[0]]
+    # img_ids = coco.getImgIds()
+    img_data = coco.imgs[img_id]
     print(f"load image from: {img_data['file_name']}")
 
     cat_ids = coco.getCatIds()
     anns_ids = coco.getAnnIds(imgIds=img_data['id'], catIds=cat_ids, iscrowd=None)
     anns = coco.loadAnns(anns_ids)
+    
     mask = coco.annToMask(anns[0])  # sampling annotation mask from anno_id 0 as a canvas.
     mask = np.stack([mask, mask, mask], axis=2) * 0  # dim = 2 -> [h,w,3]
 
@@ -201,8 +202,9 @@ def convert_all_images(path):
         
 
 # path = '../data/alpha-rt/annotation/val/val.json'
-path = '../data/coco/annotations/instances_val2017.json'
+# path = '../data/coco/annotations/instances_val2017.json'
+path = './outputs/test_annotation.json'
 
-# convert_all_images(path)
+convert_all_images(path)
 # 0 image only
-annotation_to_mask(1, path)
+# annotation_to_mask(1, path)

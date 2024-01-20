@@ -61,14 +61,13 @@ def annotations(mask_path):
     for i, file in enumerate(files):
         img = cv2.imread(file, 0)
         tmp = cl.OrderedDict()
-        contours = measure.find_contours(img, 0.5)
         segmentation_list = []
+        contours = measure.find_contours(img, 0.5)
 
         for contour in contours:
             for a in contour:
-                segmentation_list.append(a[0])
                 segmentation_list.append(a[1])
-
+                segmentation_list.append(a[0])
 
         mask = np.array(img)
         obj_ids = np.unique(mask)
