@@ -55,55 +55,52 @@ PALETTE = [
     [64, 192, 96], [64, 160, 64], [64, 64, 0],
     ]  # COCO-Stuff dataset patlette
 
+def annotation_to_mask(img_id: int, path=None, output_dir=None, coco=None):
+    print(f"- make segmentaion mask from annotaion")
 
-def visiualize_annotation(img_id: int, path=None, img_dir=None, output_dir=None, coco=None):
-    print(f"- add segmentaion mask to original image")
     if coco == None:
         coco = COCO(path)
-
+    # img_ids = coco.getImgIds()
     img_data = coco.imgs[img_id]
+    print(f"load image from: {img_data['file_name']}")
+
     cat_ids = coco.getCatIds()
     anns_ids = coco.getAnnIds(imgIds=img_data['id'], catIds=cat_ids, iscrowd=None)
     anns = coco.loadAnns(anns_ids)
+    
+    mask = coco.annToMask(anns[0])  # sampling annotation mask from anno_id 0 as a canvas.
+    mask = np.stack([mask, mask, mask], axis=2) * 0  # dim = 2 -> [h,w,3]
 
-    img = np.array(Image.open(img_dir + "/" + img_data['file_name']))
-    plt.figure(figsize=(img_data["width"]/100, img_data["height"]/100), dpi=100)
-    plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
-    plt.imshow(img)
-    coco.showAnns(anns)  # ploting to current fig and ax 
-
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png")  # save fig to buffer in order to save PIL image
-    plt.close()
-    buf.seek(0)
-    img = Image.open(buf).convert('RGB').resize((img_data["width"], img_data["height"]))
-
-    img_drawer = ImageDraw.Draw(img)
     for i, a in enumerate(anns):
-        x, y, w, h = a["bbox"]
         color = PALETTE[a["category_id"]]
-        img_drawer.rectangle([(x,y),(x+w, y+h)], outline=tuple(color), width=2)
-        
+        one_mask = np.where(coco.annToMask(a) > 0, 1, 0)
+        one_mask = np.stack([one_mask * color[0], one_mask * color[1], one_mask * color[2]], axis=2)
+        mask = np.where(one_mask > 0, one_mask, mask)  # overlap non-zero mask on previous mask
+    
     # Extract the file name from img_data['file_name']
     file_name = os.path.basename(img_data['file_name'])
     # Construct the output path by joining the 'outputs' directory and the file name
     output_path = os.path.join(output_dir, file_name) # 保存場所
-    img.save(output_path)
+    
+    mask = Image.fromarray(np.uint8(mask))
+    mask.save(output_path)
 
 
-def convert_all_images(path, img_dir, output_dir):
+def convert_all_images(path, output_dir):
     coco = COCO(path)
     
     # すべての画像IDを取得
     img_ids = coco.getImgIds()
 
     for img_id in img_ids:
-        visiualize_annotation(img_id, path, img_dir, output_dir)
-        
+        annotation_to_mask(img_id, path, output_dir)
 
+
+# path = '../data/alpha-rt/annotation/val/val.json'
 # path = '../data/coco/annotations/instances_val2017.json'
 path = '../data/test/annotations/test_annotation.json'
-img_dir = '../data/test/imgs/'
-output_dir = "./outputs/vis_annotation/"
+output_dir = "./outputs/mask_from_annotation/"
 
-convert_all_images(path, img_dir, output_dir)
+convert_all_images(path, output_dir)
+# 0 image only
+# annotation_to_mask(1, path)

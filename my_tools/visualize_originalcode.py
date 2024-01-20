@@ -56,7 +56,80 @@ PALETTE = [
     ]  # COCO-Stuff dataset patlette
 
 
-def visiualize_annotation(img_id: int, path=None, img_dir=None, output_dir=None, coco=None):
+
+def annotation_summary(path: str):
+    print("summary --------------------------------------------------")
+    print("- file path")
+    print(f"\t {path}")
+    print()
+
+    txtst = textwrap.TextWrapper(width=50, max_lines=1, placeholder=" ...")
+    with open(path) as f:
+        file = json.load(f)
+
+    try:
+        info = file["info"]
+        print("- INFO section")
+        for k, v in info.items():
+            print(f"\t {k.ljust(16)}: {v}")
+        print()
+    except KeyError:
+        print("[WARNING] not exist INFO section")
+        print()
+        
+    try:
+        cat = file["categories"]
+        print("- CATEGORIS section")
+        for c in cat:
+            for k, v in c.items():
+                print(f"\t {k.ljust(16)}: {txtst.fill(str(v))}")
+            print("\t ---")
+        print()
+    except KeyError:
+        print("[WARNING] not exist CATEGORIS section")
+        print()
+    
+    try:
+        img = file["images"]
+        img_n = len(img)
+        print(f"- IMAGES length: {img_n}")
+        img_sample = img[0]
+        print("- IMAGES sample")
+        for k, v in img_sample.items():
+            print(f"\t {k.ljust(16)}: {v}")
+        print()
+    except KeyError:
+        print("[WARNING] not exist IMAGES section")
+        print()
+
+    try:
+        anns = file["annotations"]
+        anns_n = len(anns)
+        print(f"- ANNOTATION length: {anns_n}")
+        anns_sample = anns[0]
+        print("- ANNOTATIONS sample")
+        for k, v in anns_sample.items():
+            print(f"\t {k.ljust(16)}: {txtst.fill(str(v))}")
+        print()
+    except KeyError:
+        print("[WARNING] not exist ANNOTATIONS section")
+        print()
+
+    print("---------------------------------------------------------")
+    return None
+
+
+
+def extract_id(path: str):
+    img_id: list[int] = []
+    with open(path) as f:
+        for img_data in json.load(f)["images"]:
+            img_id += [img_data["id"]]
+    return img_id
+
+
+
+def visiualize_annotation(img_id: int, path=None, img_dir=None, coco=None):
     print(f"- add segmentaion mask to original image")
     if coco == None:
         coco = COCO(path)
@@ -83,27 +156,55 @@ def visiualize_annotation(img_id: int, path=None, img_dir=None, output_dir=None,
         x, y, w, h = a["bbox"]
         color = PALETTE[a["category_id"]]
         img_drawer.rectangle([(x,y),(x+w, y+h)], outline=tuple(color), width=2)
-        
+    return img
+
+
+
+def annotation_to_mask(img_id: int, path=None, coco=None):
+    print(f"- make segmentaion mask from annotaion")
+
+    if coco == None:
+        coco = COCO(path)
+    # img_ids = coco.getImgIds()
+    img_data = coco.imgs[img_id]
+    print(f"load image from: {img_data['file_name']}")
+
+    cat_ids = coco.getCatIds()
+    anns_ids = coco.getAnnIds(imgIds=img_data['id'], catIds=cat_ids, iscrowd=None)
+    anns = coco.loadAnns(anns_ids)
+    
+    mask = coco.annToMask(anns[0])  # sampling annotation mask from anno_id 0 as a canvas.
+    mask = np.stack([mask, mask, mask], axis=2) * 0  # dim = 2 -> [h,w,3]
+
+    for i, a in enumerate(anns):
+        color = PALETTE[a["category_id"]]
+        one_mask = np.where(coco.annToMask(a) > 0, 1, 0)
+        one_mask = np.stack([one_mask * color[0], one_mask * color[1], one_mask * color[2]], axis=2)
+        mask = np.where(one_mask > 0, one_mask, mask)  # overlap non-zero mask on previous mask
+    
     # Extract the file name from img_data['file_name']
     file_name = os.path.basename(img_data['file_name'])
     # Construct the output path by joining the 'outputs' directory and the file name
-    output_path = os.path.join(output_dir, file_name) # 保存場所
-    img.save(output_path)
+    output_path = os.path.join("./outputs/mask_from_annotation/", file_name) # 保存場所
+    
+    mask = Image.fromarray(np.uint8(mask))
+    mask.save(output_path)
 
 
-def convert_all_images(path, img_dir, output_dir):
+def convert_all_images(path):
     coco = COCO(path)
     
     # すべての画像IDを取得
     img_ids = coco.getImgIds()
 
     for img_id in img_ids:
-        visiualize_annotation(img_id, path, img_dir, output_dir)
+        annotation_to_mask(img_id, path)
         
 
+# path = '../data/alpha-rt/annotation/val/val.json'
 # path = '../data/coco/annotations/instances_val2017.json'
-path = '../data/test/annotations/test_annotation.json'
-img_dir = '../data/test/imgs/'
-output_dir = "./outputs/vis_annotation/"
+path = './outputs/test_annotation.json'
 
-convert_all_images(path, img_dir, output_dir)
+convert_all_images(path)
+# 0 image only
+# annotation_to_mask(1, path)
