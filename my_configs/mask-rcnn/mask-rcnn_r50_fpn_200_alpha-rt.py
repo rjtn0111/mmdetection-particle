@@ -55,9 +55,6 @@ model = dict(
             type='DeltaXYWHBBoxCoder',
             target_means=[.0, .0, .0, .0],
             target_stds=[1.0, 1.0, 1.0, 1.0]),
-	    # reference: https://mmdetection.readthedocs.io/en/latest/user_guides/train.html#train-with-customized-datasets
-	    # bbox_head=dict(num_classes=1), # add
-	    # mask_head=dict(num_classes=1), # add
         loss_cls=dict(
             type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
         loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
@@ -145,7 +142,7 @@ model = dict(
             nms=dict(type='nms', iou_threshold=0.7),
             min_bbox_size=0),
         rcnn=dict(
-            score_thr=0.8, # score threshold
+            score_thr=0.05,#0.8, # score threshold
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=10,
             mask_thr_binary=0.5)))
