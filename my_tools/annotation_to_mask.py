@@ -98,7 +98,7 @@ def convert_all_images(path, output_dir):
 
 # path = '../data/alpha-rt/annotation/val/val.json'
 # path = '../data/coco/annotations/instances_val2017.json'
-path = '../data/test/annotations/test_annotation.json'
+path = '../data/demo/annotations/val_dilate.json'
 output_dir = "./outputs/mask_from_annotation/"
 
 convert_all_images(path, output_dir)

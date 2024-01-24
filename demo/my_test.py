@@ -7,13 +7,13 @@ import mmcv
 
 # モデルの設定ファイルと学習済モデルへのパスを指定する
 config_file = '../my_configs/mask-rcnn/mask-rcnn_r50_fpn_200_alpha-rt.py'
-checkpoint_file = '../work_dirs/mask-rcnn_r50_fpn_200_alpha-rt/epoch_200.pth'
+checkpoint_file = '../work_dirs/mask-rcnn_r50_fpn_200_alpha-rt/epoch_110.pth'
 
 # モデルの初期化
 model = init_detector(config_file, checkpoint_file, device='cuda:0')
 
 # テストする画像を指定
-img = '../data/alpha-rt/imgs/val/00009998.png'
+img = '../data/alpha-rt/imgs/val/00007500.png'
 img = mmcv.imread(img)
 
 # テスト
