@@ -125,3 +125,6 @@ work_dirs/
 # original
 log/
 temp_dir/
+my_tools/outputs/
+weghts/
+demo/
