@@ -1,21 +1,3 @@
-# 各パートのdefault設定を継承
-_base_ = [
-    # '../../configs/_base_/models/mask-rcnn_r50_fpn.py',
-    '../datasets/alpha-rt_instance.py',
-    '../schedules/schedule_200.py',
-    '../default_runtime.py'
-]
-
-
-# runtime setting
-vis_backends = [
-	dict(type='LocalVisBackend'),
-	# dict(type="TensorboardVisBackend"),
-	dict(type="WandbVisBackend",
-      init_kwargs={'project': 'mmdetection-particle', 'name': 'mask-rcnn_r50_fpn_200_alpha-rt'}), # add project name
-    ]
-visualizer = dict(type='DetLocalVisualizer', vis_backends=vis_backends, name='visualizer')
-
 # model settings
 model = dict(
     type='MaskRCNN',
@@ -142,10 +124,7 @@ model = dict(
             nms=dict(type='nms', iou_threshold=0.7),
             min_bbox_size=0),
         rcnn=dict(
-            score_thr=0.05,#0.8, # score threshold
+            score_thr=0.05,
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=10,
             mask_thr_binary=0.5)))
-
-# Enable automatic-mixed-precision training with AmpOptimWrapper.
-optim_wrapper = dict(type='AmpOptimWrapper')
