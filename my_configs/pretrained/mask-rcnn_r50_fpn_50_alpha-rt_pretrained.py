@@ -1,7 +1,7 @@
 _base_ = [
 	'../_base_/models/mask-rcnn_r50_fpn.py',
     '../_base_/datasets/alpha-rt_instance.py',
-    '../_base_/schedules/schedule_20e.py',
+    '../_base_/schedules/schedule_50.py',
     '../_base_/default_runtime.py'
 ]
 
@@ -16,7 +16,7 @@ model = dict(
 vis_backends = [
 	dict(type='LocalVisBackend'),
 	dict(type="WandbVisBackend",
-      init_kwargs={'project': 'mmdetection-particle', 'name': 'mask-rcnn_r50_fpn_20e_alpha-rt_pretrained'}), # add project name
+      init_kwargs={'project': 'mmdetection-particle', 'name': 'mask-rcnn_r50_fpn_50_alpha-rt_pretrained'}), # add project name
     ]
 visualizer = dict(type='DetLocalVisualizer', vis_backends=vis_backends, name='visualizer')
 
