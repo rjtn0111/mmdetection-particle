@@ -7,14 +7,16 @@ _base_ = [
 
 model = dict(
     backbone=dict(
+	    frozen_stages=1,
         init_cfg=dict(type='Pretrained',
-                      checkpoint='torchvision://resnet50')))
+                      checkpoint='torchvision://resnet50',
+		              _delete_=True)))
 
 # runtime setting
 vis_backends = [
 	dict(type='LocalVisBackend'),
 	dict(type="WandbVisBackend",
-      init_kwargs={'project': 'mmdetection-particle', 'name': 'mask-rcnn_r50_fpn_1x_alpha-rt_pretrained'}), # add project name
+      init_kwargs={'project': 'mmdetection-particle', 'name': 'mask-rcnn_r50_fpn_20e_alpha-rt_pretrained'}), # add project name
     ]
 visualizer = dict(type='DetLocalVisualizer', vis_backends=vis_backends, name='visualizer')
 
