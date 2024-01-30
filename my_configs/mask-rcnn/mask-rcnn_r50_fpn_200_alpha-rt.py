@@ -1,8 +1,8 @@
 _base_ = [
-	'../../_base_/mask-rcnn_r50_fpn.py',
-    '../../datasets/alpha-rt_instance.py',
-    '../../schedules/schedule_200.py',
-    '../../default_runtime.py'
+	'../_base_/mask-rcnn_r50_fpn.py',
+    '../_base_/datasets/alpha-rt_instance.py',
+    '../_base_/schedules/schedule_200.py',
+    '../_base_/default_runtime.py'
 ]
 
 
